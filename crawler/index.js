@@ -1,17 +1,23 @@
 const puppeteer = require('puppeteer')
 
+async function openBrowser(){
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--proxy-server=socks5://127.0.0.1:9050']
+  });
+
+  const page = await browser.newPage();
+
+  await page.goto('http://nzxj65x32vh2fkhk.onion/all');
+
+  return page
+}
+
 
 async function crawler() {
     
-    const browser = await puppeteer.launch({
-        headless: false,
-        args: ['--proxy-server=socks5://127.0.0.1:9050']
-      });
+    const page = await openBrowser()
   
-    const page = await browser.newPage();
-  
-    await page.goto('http://nzxj65x32vh2fkhk.onion/all');
-
     let headers = await page.$$eval('#list > div > div > div.pre-info.pre-header > div > div.col-sm-5 > h4',
      h => h.map(header => (header.textContent)));
     
@@ -28,14 +34,17 @@ async function crawler() {
      options => options.map(option => (option.textContent).replace(/[\\n]+[\\t]+/g, '')));
 
     const allPosts = headers.map((header, index) => {
+      f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
       return {
         header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
+        author: f.slice(0, f.indexOf(' at ')).replace('Posted by ', ''),
         content: contents[index],
-        footer: footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
+        date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime()
       }
     })
-
+    browser.close()
     return allPosts
   }
+
 
 module.exports = crawler
