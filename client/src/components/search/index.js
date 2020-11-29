@@ -1,6 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField';
 import Post from '../posts';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+
+const useStyles = makeStyles({
+    search: {
+        color: 'white',
+        border: '0.5px solid white',
+        height: '40px',
+        width: '400px'
+    },
+    postsContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        marginTop: '10px'
+    }
+  });
 
 
 export default function Search() {
@@ -11,7 +29,7 @@ export default function Search() {
         let timeout
         return function(...args) {
           clearTimeout(timeout)
-          timeout = setTimeout(() => func.apply(args), wait)
+          timeout = setTimeout(() => func(args), wait)
         }
       }, [])
 
@@ -28,18 +46,27 @@ export default function Search() {
         search('a')
     }, [search])
 
-    return (
-        <>
-            <TextField id="filled-search" label="Search field" type="search" variant="outlined" 
-            onChange={(e) => search(e.target.value)}/>
+    const classes = useStyles()
 
-            {posts.length > 0 &&
-                posts.map(post => {
-                    return <Post
-                        post={post}
-                    />
-                })
-            }
+    return (
+    
+        <>
+            <TextField id="filled-search"           
+                defaultValue="Search"
+                variant="outlined" 
+                size="small"
+                className={classes.search}
+                onChange={(e) => search(e.target.value)}
+            />
+            <div className={classes.postsContainer}>
+                {posts.length > 0 &&
+                    posts.map(post => {
+                        return <Post
+                            post={post}
+                        />
+                    })
+                }
+            </div>
         </>
     )
 }
