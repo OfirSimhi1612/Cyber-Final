@@ -7,27 +7,26 @@ export default function Search() {
 
     const [posts, setPosts] = useState([])
 
-    const debouce = (func, query) => {
+    const debounce = React.useCallback((func, wait) => {
         let timeout
-        clearTimeout(timeout)
-        timeout = setTimeout(() => func.apply(query), 1000)
-      }
+        return function(...args) {
+          clearTimeout(timeout)
+          timeout = setTimeout(() => func.apply(args), wait)
+        }
+      }, [])
 
-    const search = React.useCallback(async (query) => {
+    const search = React.useCallback(debounce(async (query) => {
         if(query.length > 0){
-            const fetchData = () => {
-                fetch(`/api/search/${query}`)
-                .then(res => res.json())
-                .then(res => setPosts(res))
-                .catch(err => console.log(err))
-            }
-            debouce(fetchData, query)
+            fetch(`/api/search/${query}`)
+            .then(res => res.json())
+            .then(res => setPosts(res))
+            .catch(err => console.log(err))
         }  
-    }, [])
+    }, 1000), [debounce])
 
     useEffect(() => {
         search('a')
-    }, [])
+    }, [search])
 
     return (
         <>
