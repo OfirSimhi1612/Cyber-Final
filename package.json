@@ -1,0 +1,23 @@
+{
+  "name": "Cyber-Final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OfirSimhi1612/Cyber-Final.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OfirSimhi1612/Cyber-Final/issues"
+  },
+  "homepage": "https://github.com/OfirSimhi1612/Cyber-Final#readme",
+  "dependencies": {
+    "react": "^17.0.1"
+  }
+}
