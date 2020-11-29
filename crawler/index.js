@@ -28,14 +28,17 @@ async function crawler() {
      options => options.map(option => (option.textContent).replace(/[\\n]+[\\t]+/g, '')));
 
     const allPosts = headers.map((header, index) => {
+      f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
       return {
         header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
+        author: f.slice(0, f.indexOf(' at ')).replace('Posted by ', ''),
         content: contents[index],
-        footer: footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
+        date: new Date(f.slice(f.indexOf(' at ') + 4))
       }
     })
-
+    console.log(allPosts)
+    browser.close()
     return allPosts
   }
-
+  // crawler()
 module.exports = crawler
