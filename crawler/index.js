@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer')
 
-async function openBrowser(){
+async function crawler() {
+    
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--proxy-server=socks5://127.0.0.1:9050']
@@ -8,16 +9,7 @@ async function openBrowser(){
 
   const page = await browser.newPage();
 
-  await page.goto('http://nzxj65x32vh2fkhk.onion/all');
-
-  return page
-}
-
-
-async function crawler() {
-    
-    const page = await openBrowser()
-  
+  await page.goto('http://nzxj65x32vh2fkhk.onion/all');  
     let headers = await page.$$eval('#list > div > div > div.pre-info.pre-header > div > div.col-sm-5 > h4',
      h => h.map(header => (header.textContent)));
     
