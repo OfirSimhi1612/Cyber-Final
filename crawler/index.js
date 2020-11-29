@@ -33,12 +33,12 @@ async function crawler() {
         header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
         author: f.slice(0, f.indexOf(' at ')).replace('Posted by ', ''),
         content: contents[index],
-        date: new Date(f.slice(f.indexOf(' at ') + 4))
+        date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime()
       }
     })
     console.log(allPosts)
     browser.close()
     return allPosts
   }
-  // crawler()
+
 module.exports = crawler
