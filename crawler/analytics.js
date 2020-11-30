@@ -25,13 +25,13 @@ function regAuthor(author){
 async function contentAnalys(content){
     content = content.join(', ')
     try{
-        const entities = await getEntities(content)
+        // const entities = await getEntities(content)
         const SentimentAnalysis = sentiment.analyze(content);
         return {
             score: SentimentAnalysis.comparative, 
             neg_words: SentimentAnalysis.negative,
             pos_words: SentimentAnalysis.positive,
-            entities: entities.entities
+            // entities: entities.entities
         }
     } catch(error){
         console.log(error)

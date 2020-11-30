@@ -37,12 +37,12 @@ export default function Search() {
 
     const search = React.useCallback(debounce(async (query) => {
         if(query.length > 0){
-            fetch(`/api/search/${query}`)
+            fetch(`/api/search/${query[0]}`)
             .then(res => res.json())
             .then(res => setPosts(res))
             .catch(err => console.log(err))
         } else {
-            fetch(`/api/search/a`)
+            fetch(`/api/search/latest`)
             .then(res => res.json())
             .then(res => setPosts(res))
             .catch(err => console.log(err))
@@ -50,7 +50,7 @@ export default function Search() {
     }, 1000), [debounce])
 
     useEffect(() => {
-        search('a')
+        search()
     }, [search])
 
     const classes = useStyles()
@@ -59,7 +59,7 @@ export default function Search() {
     
         <>
             <TextField id="filled-search"           
-                defaultValue="Search"
+                placeholder="Search"
                 variant="outlined" 
                 size="small"
                 className={classes.search}

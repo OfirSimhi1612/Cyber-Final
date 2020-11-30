@@ -1,5 +1,9 @@
 const puppeteer = require('puppeteer')
 const { regAuthor, contentAnalys } = require('./analytics')
+const { Client } = require('@elastic/elasticsearch')
+const client = new Client({ node: process.env.ELS_URL || 'http://localhost:9200' })
+const compare = require('./compare')
+
 
 async function crawler() {
     
@@ -29,14 +33,14 @@ async function crawler() {
     const allPosts = headers.map(async (header, index) => {
       try{
         const f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
-        // const content_analys = await  contentAnalys(contents[index])
+        const content_analys = await  contentAnalys(contents[index])
         // console.log('here')
         return {
           header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
           author: regAuthor(f.slice(0, f.indexOf(' at ')).replace('Posted by ', '')),
           content: contents[index],
           date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime(),
-          // content_analys: content_analys
+          content_analys: content_analys
         }
       } catch(err){
         console.log(err)
@@ -45,7 +49,41 @@ async function crawler() {
 
     browser.close()
     return await Promise.all(allPosts)
-  }
+}
+
+async function initialElastic(){
+    if(!(await client.indices.exists({index:'posts'})).body){
+        await client.indices.create({
+            index: 'posts',
+        })
+        console.log('added index: posts')
+    }
+    return
+}
+
+async function bulkPost(posts){
+    await initialElastic()
+    // posts = await compare(posts)
+    const body = posts.flatMap(doc => [{ index: { _index: 'posts' } }, doc])
+    if(body.length > 0){
+        try{
+            await client.bulk({
+                index: 'posts-test',
+                body: body
+            })
+        } catch(err){
+            console.log(err.body.error)
+        }
+    }
+    
+}
+
+async function updateDataBase(){
+    const posts = await crawler()
+    bulkPost(posts)
+}
 
 
-module.exports = crawler
+setInterval(updateDataBase, 120000)
+
+module.exports = bulkPost
