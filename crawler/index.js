@@ -4,12 +4,14 @@ const { Client } = require('@elastic/elasticsearch')
 const client = new Client({ node: process.env.ELS_URL || 'http://localhost:9200' })
 const compare = require('./compare')
 
+const host = process.env.TOR_HOST || '127.0.0.1'
+const port = process.env.TOR_PORT || '9050' 
 
 async function crawler() {
     
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--proxy-server=socks5://127.0.0.1:9050']
+    args: ['--no-sandbox', `--proxy-server=socks5://${host}:${port}`]
   });
 
   const page = await browser.newPage();
@@ -84,6 +86,6 @@ async function updateDataBase(){
 }
 
 
-setInterval(updateDataBase, 120000)
+setInterval(updateDataBase, 30000)
 
 // module.exports = bulkPost
