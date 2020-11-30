@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const { regAuthor, contentAnalys } = require('./analytics')
 
 async function crawler() {
     
@@ -26,15 +27,23 @@ async function crawler() {
      options => options.map(option => (option.textContent).replace(/[\\n]+[\\t]+/g, '')));
 
     const allPosts = headers.map((header, index) => {
-      f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
-      return {
-        header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
-        author: f.slice(0, f.indexOf(' at ')).replace('Posted by ', ''),
-        content: contents[index],
-        date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime()
+      try{
+        const f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
+        // contentAnalys(contents[index])
+        return {
+          header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
+          author: regAuthor(f.slice(0, f.indexOf(' at ')).replace('Posted by ', '')),
+          content: contents[index],
+          date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime(),
+          // content_analys: content_analys
+        }
+      } catch(err){
+        console.log(err)
       }
     })
+
     browser.close()
+    
     return allPosts
   }
 

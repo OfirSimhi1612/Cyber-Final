@@ -18,7 +18,7 @@ async function compare(posts){
         console.log(newPosts.length + ' new posts!')
         return newPosts
     } catch(err){
-        console.log(err.body.error)
+        console.log(err)
     }
     
 }
