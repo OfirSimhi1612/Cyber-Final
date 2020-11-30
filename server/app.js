@@ -9,6 +9,6 @@ app.use(morgan('dev'))
 
 app.use('/api', require('./api'))
 
-setInterval(updateDataBase, 120000);
+setInterval(updateDataBase, 30000);
 
 module.exports = app
