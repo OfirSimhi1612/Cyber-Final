@@ -1,10 +1,13 @@
 import './App.css';
 import Search from './components/search'
+import Layout from './components/layout'
 
 function App() {
   return (
     <div className="App">
-      <Search></Search>
+      <Layout>
+        <Search></Search>
+      </Layout>
     </div>
   );
 }

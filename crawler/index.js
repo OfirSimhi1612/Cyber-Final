@@ -26,10 +26,11 @@ async function crawler() {
     let footers = await page.$$eval('#list > div > div > div.pre-info.pre-footer > div > div:nth-child(1)',
      options => options.map(option => (option.textContent).replace(/[\\n]+[\\t]+/g, '')));
 
-    const allPosts = headers.map((header, index) => {
+    const allPosts = headers.map(async (header, index) => {
       try{
         const f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
-        // contentAnalys(contents[index])
+        // const content_analys = await  contentAnalys(contents[index])
+        // console.log('here')
         return {
           header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
           author: regAuthor(f.slice(0, f.indexOf(' at ')).replace('Posted by ', '')),
@@ -43,8 +44,7 @@ async function crawler() {
     })
 
     browser.close()
-    
-    return allPosts
+    return await Promise.all(allPosts)
   }
 
 

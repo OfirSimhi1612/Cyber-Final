@@ -11,11 +11,12 @@ const useStyles = makeStyles({
         color: 'white',
         border: '0.5px solid white',
         height: '40px',
-        width: '400px'
+        width: '400px',
+        alignSelf: 'center'
     },
     postsContainer: {
         display: 'flex',
-        flexDirection: 'column',
+        flexWrap: 'wrap',
         gap: '10px',
         marginTop: '10px'
     }
@@ -40,7 +41,12 @@ export default function Search() {
             .then(res => res.json())
             .then(res => setPosts(res))
             .catch(err => console.log(err))
-        }  
+        } else {
+            fetch(`/api/search/a`)
+            .then(res => res.json())
+            .then(res => setPosts(res))
+            .catch(err => console.log(err))
+        } 
     }, 1000), [debounce])
 
     useEffect(() => {

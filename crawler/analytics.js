@@ -1,12 +1,16 @@
 const Sentiment = require('sentiment');
 const sentiment = new Sentiment(); 
 const NER = require('ner');
+const util = require('util');
 
 
 const ner = new NER({
     port:9191,
     host:'localhost'
 })
+
+const getEntities = util.promisify(ner.get).bind(ner)
+
 
 function regAuthor(author){
     let reg_author = author
@@ -21,14 +25,7 @@ function regAuthor(author){
 async function contentAnalys(content){
     content = content.join(', ')
     try{
-        const entities = await new Promise((resolve, reject) => {
-            ner.get(content, (err, res) => {
-                if(err){
-                    reject(err)
-                }
-                resolve(res)
-            })
-        })
+        const entities = await getEntities(content)
         const SentimentAnalysis = sentiment.analyze(content);
         return {
             score: SentimentAnalysis.comparative, 
@@ -40,7 +37,6 @@ async function contentAnalys(content){
         console.log(error)
     }   
 }
-
 
 module.exports = {
     regAuthor,
