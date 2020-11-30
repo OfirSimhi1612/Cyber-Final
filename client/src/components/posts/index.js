@@ -38,6 +38,7 @@ const useStyles = makeStyles({
 
 export default function Post({post}) {
 
+    console.log(post)
     const props = {
       score: post.analysis.score
     }
@@ -45,16 +46,16 @@ export default function Post({post}) {
     const classes = useStyles(props);
 
     return (
-        <Paper className={classes.root} square>
+      <Paper className={classes.root} square>
         <Typography  color="textSecondary" gutterBottom>
           <span className={classes.title}>{post.header}</span>  <span class={classes.author}>{post.author}</span>
         </Typography>
         <Typography className={classes.content} color="textSecondary">
-          {post.content}
+          {post.content.join('\n')}
         </Typography>
         <Typography className={classes.date}>
           {new Date(post.date).toUTCString()}
         </Typography>
-    </Paper>
+      </Paper>
     )
 }

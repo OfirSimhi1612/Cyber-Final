@@ -40,7 +40,7 @@ async function crawler() {
           author: regAuthor(f.slice(0, f.indexOf(' at ')).replace('Posted by ', '')),
           content: contents[index],
           date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime(),
-          content_analys: content_analys
+          analysis: content_analys
         }
       } catch(err){
         console.log(err)
@@ -63,7 +63,7 @@ async function initialElastic(){
 
 async function bulkPost(posts){
     await initialElastic()
-    // posts = await compare(posts)
+    posts = await compare(posts)
     const body = posts.flatMap(doc => [{ index: { _index: 'posts' } }, doc])
     if(body.length > 0){
         try{
@@ -86,4 +86,4 @@ async function updateDataBase(){
 
 setInterval(updateDataBase, 120000)
 
-module.exports = bulkPost
+// module.exports = bulkPost

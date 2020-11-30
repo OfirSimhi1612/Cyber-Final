@@ -17,7 +17,6 @@ router.get('/latest', async (req, res) => {
 
 
 router.get('/:query', async (req, res) => {
-    console.log('here')
     try{
         const searchResults = await searchPosts(req.params.query) 
 
