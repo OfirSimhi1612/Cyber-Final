@@ -19,23 +19,38 @@ export default function Keywords() {
 
     const classes = useStyles();
 
-    const addKeyword = React.useCallback(() => {
-        // fetch(`/api/alerts/keywords`, {
-        //     method: 'POST',
-        //     body: {
-        //       user: 'root',
-        //       keyword: input
-        //     }
-        // })
-        console.log(input)
-    }, [input])
-
     const get = React.useCallback(() => {
         fetch('/api/alerts/keywords/root')
         .then(res => res.json())
         .then(res => setKeywords(res))
         .catch(err => console.log(err))
     }, [])
+
+    const addKeyword = React.useCallback(() => {
+        fetch(`/api/alerts/keywords`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user: 'root',
+              keyword: input
+            })
+        }).then(res => get())
+    }, [input])
+
+    const removeKeyword = React.useCallback((keyword) => {
+        fetch(`/api/alerts/keywords`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user: 'root',
+              keyword: keyword
+            })
+        }).then(res => get())
+    }, [keywords])
 
     useEffect(get, [])
 
@@ -46,7 +61,17 @@ export default function Keywords() {
             {keywords.length > 0 &&
                 <ul>
                     {
-                        keywords.map(key => <li>{key}</li>)
+                        keywords.map(key => 
+                        <li>
+                            {key}
+                            <Button 
+                                variant="contained" 
+                                id={key}
+                                onClick={(e) => removeKeyword(e.target.id)} 
+                                size='sm'>
+                                    Del
+                                </Button>
+                        </li>)
                     }
                 </ul>
             }
