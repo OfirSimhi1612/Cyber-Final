@@ -58,7 +58,6 @@ services:
     ports:
       - 8081:8080
 
-
 volumes:
   elastic_db: 
     driver: local

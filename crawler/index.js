@@ -1,15 +1,21 @@
 const puppeteer = require('puppeteer')
 const { regAuthor, contentAnalys } = require('./analytics')
+const axios = require('axios')
 const { Client } = require('@elastic/elasticsearch')
 const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200' })
 
+
 const compare = require('./compare')
 
-const host = process.env.TOR_HOST || 'localhost'
-const port = process.env.TOR_PORT || '9050' 
+const torHost = process.env.TOR_HOST || 'localhost'
+const torPort = process.env.TOR_PORT || '9050'
+
+const alertsHost = process.env.ALERTS_HOST || 'localhost'
+const alertsPort = process.env.ALERTS_PORT || '3001'
+
 
 async function crawler() {
-  const args = ["--proxy-server=socks5://localhost:9050", "--no-sandbox"];
+  const args = [`--proxy-server=socks5://${torHost}:${torPort}`, "--no-sandbox"];
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -22,6 +28,7 @@ async function crawler() {
     await page.goto('http://nzxj65x32vh2fkhk.onion/all'); 
   } catch(err){
     console.log(err)
+    axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 
     let headers = await page.$$eval('#list > div > div > div.pre-info.pre-header > div > div.col-sm-5 > h4',
@@ -50,6 +57,7 @@ async function crawler() {
         }
       } catch(err){
         console.log(err)
+        axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
       }
     })
 
@@ -74,6 +82,7 @@ async function initialElastic(){
      return false
   } catch(err){
     console.log(err.body)
+    await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 }
 
@@ -92,10 +101,16 @@ async function bulkPost(posts){
             })
         } catch(err){
             console.log(err.body.error)
+            await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
         }
     }
+    if(posts.length > 0){
+      await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: posts })
+    }
+
   } catch(err){
     console.log(err.body)
+    await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
     
     
@@ -106,7 +121,8 @@ async function updateDataBase(){
     const posts = await crawler()
     bulkPost(posts)
   } catch(err){
-    console.log(err)
+    console.log(err.message)
+    await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 }
 

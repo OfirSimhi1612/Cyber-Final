@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -8,6 +8,10 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Saerch from '../search';
+import Keywords from '../keywords'
+import Alerts from '../alerts'
+import Badge from '@material-ui/core/Badge';
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,7 +46,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: '#1C1E24',
     width: '100%',
@@ -59,6 +63,22 @@ export default function FullWidthTabs() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [alertCount, setAlertCount] = useState(3)
+
+  const fetchAlertsCount = React.useCallback(() => {
+      fetch('/api/alerts/count/root')
+      .then(res => res.json())
+      .then(res => setAlertCount(res.count))
+      .catch(err => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    fetchAlertsCount()
+      const get = setInterval(fetchAlertsCount, 60000);
+
+      return () => clearInterval(get)
+    
+  }, [])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -82,7 +102,9 @@ export default function FullWidthTabs() {
         >
           <Tab className={classes.tab} label="Search" {...a11yProps(0)} />
           <Tab className={classes.tab} label="Keywords" {...a11yProps(1)} />
-          <Tab className={classes.tab} label="Alerts" {...a11yProps(2)} />
+          <Tab className={classes.tab} icon={
+              <Badge badgeContent={alertCount} color="error"/>} 
+              label="Alerts" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -94,10 +116,10 @@ export default function FullWidthTabs() {
           <Saerch></Saerch>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Keywords
+          <Keywords></Keywords>
         </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          Alerts
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <Alerts setCount={setAlertCount} count={alertCount}></Alerts>
         </TabPanel>
       </SwipeableViews>
     </div>
