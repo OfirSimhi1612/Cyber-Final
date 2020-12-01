@@ -1,0 +1,73 @@
+version: '3.1'
+
+services: 
+
+  tor:
+    image: dperson/torproxy
+    hostname: tor
+    container_name: tor
+    environment: 
+      HOST_HOSTNAME: tor
+    ports:
+      - 9050:9050
+      - 8118:8118
+    networks: 
+      - scrapper
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - node.name=elasticsearch
+    logging: 
+        driver: none
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  crawler:
+    build: 
+      context: ./crawler
+      dockerfile: Dockerfile
+    container_name: crawler
+    links:
+      - tor:tor 
+    depends_on:
+      - tor
+      - elasticsearch
+    environment: 
+      ELS_URL: http://172.23.0.1:9200
+      TOR_HOST: tor
+      TOR_PORT: 9055
+    command: ['node', '.']
+    networks: 
+      - scrapper
+
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    depends_on: 
+      - elasticsearch
+    environment: 
+      ELS_URL: http://172.23.0.1:9200
+    command: ["./wait-for-it.sh", "elasticsearch:9201", "--", "node", "."]
+    ports:
+      - 8081:8080
+
+
+volumes:
+  elastic_db: 
+    driver: local
+
+networks:
+  scrapper:
+    driver: bridge
+
+
+    
+    
+

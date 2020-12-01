@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
     "ner": "^1.0.0",
     "puppeteer": "^5.5.0",
     "sentiment": "^5.0.2"
