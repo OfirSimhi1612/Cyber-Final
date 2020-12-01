@@ -26,7 +26,7 @@ async function saveAlert(alert){
 
 function createAlert(post, keywords,  user = 'root'){
     const alert = new Alert({
-        notification: `Some of your keywords (${keywords.join(', ')}), appeared in a new post!`,
+        notification: `One of your keywords (${keywords.join(', ')}), appeared in a new post!`,
         post,
         user,
         read: false
@@ -35,37 +35,29 @@ function createAlert(post, keywords,  user = 'root'){
     return alert
 }
 
-function checkKeywords(post, keywords){
-    const searcher = new FuzzySearch(post, ['title', 'author', 'content', 'analysis'], {
+function checkKeywords(posts, keyword){
+    posts.forEach(post => post.content = post.content.join(', '))
+    const searcher = new FuzzySearch(posts, ['title', 'author', 'content'], {
         caseSensitive: false,
       });
 
-    const matching = []
+    const result = searcher.search(posts);
 
-    for(let keyword of keywords){
-        const result = searcher.search(keyword);
-        if(result){
-            matching.push(keyword)
-        }
-    }
-
-    if(matching.length > 0){
-        return matching
-    } 
-
-    return false
+    return result
 }
 
 async function processPosts(newPosts){
     // should do the following process for all the users
     try{
-        newPosts.forEach(async (post) => {
-            const keywords = await getKeywords() 
-            const matching = checkKeywords(post, keywords)
-            if(matching){
-                const alert = createAlert(post, keywords)
-                console.group(alert)
-                await saveAlert(alert)
+        const keywords = await getKeywords() 
+        keywords.forEach(keyword => {
+            const matchingPosts = checkKeywords(newPosts, keyword)
+            if(matchingPosts.length > 0){
+                matchingPosts.forEach(post => {
+                    const alert = createAlert(post, keyword)
+                    console.group(alert)
+                    await saveAlert(alert)
+                })
             }
         })
         return true
@@ -79,7 +71,8 @@ async function saveError(error){
     try{
         const errAlert = new Alert({
             notification: 'The crawler has failed!',
-            reason: error
+            reason: error,
+            user: 'root'
         })
         await saveAlert(errAlert)
         return true
@@ -88,6 +81,7 @@ async function saveError(error){
         return false
     }
 }
+
 
 module.exports = {
     processPosts,
