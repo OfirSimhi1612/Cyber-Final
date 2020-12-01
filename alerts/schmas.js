@@ -12,15 +12,17 @@ db.once('open', function() {
 });
 
 const alertSchema = new mongoose.Schema({
-    title: String,
-    content: String,
-    keywords: Array,
-    date: Number,
+    notification: String,
+    post: Object,
+    user: String,
+    read: Boolean,
+    reason: String
 });
 
 const Alert = mongoose.model('Alert', alertSchema);
 
 const keywordSchema = new mongoose.Schema({
+    user: String,
     keywords: Array
 });
 
@@ -30,3 +32,4 @@ module.exports = {
     Keyword,
     Alert
 }
+ 

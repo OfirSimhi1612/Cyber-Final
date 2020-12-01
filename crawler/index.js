@@ -3,13 +3,14 @@ const { regAuthor, contentAnalys } = require('./analytics')
 const { Client } = require('@elastic/elasticsearch')
 const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200' })
 
+
 const compare = require('./compare')
 
 const host = process.env.TOR_HOST || 'localhost'
 const port = process.env.TOR_PORT || '9050' 
 
 async function crawler() {
-  const args = ["--proxy-server=socks5://localhost:9050", "--no-sandbox"];
+  const args = [`--proxy-server=socks5://${host}:9050`, "--no-sandbox"];
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -53,9 +54,9 @@ async function crawler() {
       }
     })
 
-    for(let i = 0; i < allPosts.length; i++){
-      allPosts[i].analysis = await contentAnalys(allPosts[i].content)
-    }
+    // for(let i = 0; i < allPosts.length; i++){
+    //   allPosts[i].analysis = await contentAnalys(allPosts[i].content)
+    // }
 
     browser.close()
     return allPosts
