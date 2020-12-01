@@ -13,6 +13,7 @@ const torPort = process.env.TOR_PORT || '9050'
 const alertsHost = process.env.ALERTS_HOST || 'localhost'
 const alertsPort = process.env.ALERTS_PORT || '3001'
 
+console.log(torHost)
 
 async function crawler() {
   const args = [`--proxy-server=socks5://${torHost}:${torPort}`, "--no-sandbox"];
