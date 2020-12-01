@@ -1,12 +1,23 @@
 const express = require('express')
 const morgan = require('morgan')
-const { processPosts, saveError } = require('./mongo')
+const { processPosts, saveError, getKeywords } = require('./mongo')
 const { Alert } = require('./schmas');
 
 const app = express()
 
 app.use(express.json())
 app.use(morgan('dev'))
+
+app.get('/alerts/keywords/:user', async (req, res) => {
+    try{
+        const keywords = await getKeywords(req.params.user)
+
+        res.send(keywords)
+    } catch(err){
+        console.log(err)
+        res.status(500).send(false)
+    }
+})
 
 app.get('/alerts/:user', async (req, res) => {
     try{

@@ -86,5 +86,6 @@ async function saveError(error){
 
 module.exports = {
     processPosts,
-    saveError
+    saveError,
+    getKeywords
 }

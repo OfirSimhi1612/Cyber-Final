@@ -8,6 +8,17 @@ const alertsPort = process.env.ALERTS_PORT || '3001'
 
 const alertsURL = (entry) =>  `http://${alertsHost}:${alertsPort}/alerts/${entry}`
 
+router.get('/keywords/:user', async (req, res) => {
+    try{
+        const {data: keywords} = await axios.get(alertsURL(`keywords/${req.params.user}`))
+        
+        res.send(keywords)
+    } catch(err){
+        console.log(err)
+        res.status(500).send('error')
+    }
+})
+
 router.get('/:user', async (req, res) => {
     try{
         const {data: alerts} = await axios.get(alertsURL(req.params.user))
