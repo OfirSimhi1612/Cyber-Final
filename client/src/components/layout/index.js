@@ -81,7 +81,8 @@ export default function FullWidthTabs() {
           className={classes.tabs}
         >
           <Tab className={classes.tab} label="Search" {...a11yProps(0)} />
-          <Tab className={classes.tab} label="Analysis" {...a11yProps(1)} />
+          <Tab className={classes.tab} label="Keywords" {...a11yProps(1)} />
+          <Tab className={classes.tab} label="Alerts" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -93,7 +94,10 @@ export default function FullWidthTabs() {
           <Saerch></Saerch>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Item Two
+          Keywords
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          Alerts
         </TabPanel>
       </SwipeableViews>
     </div>
