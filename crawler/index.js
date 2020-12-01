@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer')
 const { regAuthor, contentAnalys } = require('./analytics')
+const axios = require('axios')
 const { Client } = require('@elastic/elasticsearch')
 const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200' })
 
@@ -7,7 +8,7 @@ const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200'
 const compare = require('./compare')
 
 const host = process.env.TOR_HOST || 'localhost'
-const port = process.env.TOR_PORT || '9050' 
+const alertsHost = process.env.ALERTS_HOST || 'localhost'
 
 async function crawler() {
   const args = [`--proxy-server=socks5://${host}:9050`, "--no-sandbox"];
@@ -54,9 +55,9 @@ async function crawler() {
       }
     })
 
-    // for(let i = 0; i < allPosts.length; i++){
-    //   allPosts[i].analysis = await contentAnalys(allPosts[i].content)
-    // }
+    for(let i = 0; i < allPosts.length; i++){
+      allPosts[i].analysis = await contentAnalys(allPosts[i].content)
+    }
 
     browser.close()
     return allPosts
@@ -95,6 +96,10 @@ async function bulkPost(posts){
             console.log(err.body.error)
         }
     }
+    if(posts.length > 0){
+      await axios.post(`http://${alertsHost}:3001/post`, { posts: posts })
+    }
+
   } catch(err){
     console.log(err.body)
   }
@@ -107,7 +112,8 @@ async function updateDataBase(){
     const posts = await crawler()
     bulkPost(posts)
   } catch(err){
-    console.log(err)
+    console.log(err.message)
+    await axios.post(`http://${alertsHost}:3001/error`, { error: err.message })
   }
 }
 

@@ -38,9 +38,8 @@ const useStyles = makeStyles({
 
 export default function Post({post}) {
 
-    console.log(post)
     const props = {
-      score: post.analysis.score
+      score: post.analysis ? post.analysis.score : 0
     }
 
     const classes = useStyles(props);
