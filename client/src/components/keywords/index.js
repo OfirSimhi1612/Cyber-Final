@@ -1,25 +1,17 @@
 import React, {useEffect, useState} from 'react'
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-        width: '25ch',
-      },
-    },
-  }));
 
 export default function Keywords() {
 
     const [keywords, setKeywords] = useState([])
     const [input, setInput] = useState()
 
-    const classes = useStyles();
 
-    const get = React.useCallback(() => {
+    const fetchKeywords = React.useCallback(() => {
         fetch('/api/alerts/keywords/root')
         .then(res => res.json())
         .then(res => setKeywords(res))
@@ -36,8 +28,8 @@ export default function Keywords() {
               user: 'root',
               keyword: input
             })
-        }).then(res => get())
-    }, [input])
+        }).then(res => fetchKeywords())
+    }, [input, fetchKeywords])
 
     const removeKeyword = React.useCallback((keyword) => {
         fetch(`/api/alerts/keywords`, {
@@ -49,10 +41,10 @@ export default function Keywords() {
               user: 'root',
               keyword: keyword
             })
-        }).then(res => get())
-    }, [keywords])
+        }).then(res => fetchKeywords())
+    }, [keywords, fetchKeywords])
 
-    useEffect(get, [])
+    useEffect(fetchKeywords, [fetchKeywords])
 
     return (
         <>
@@ -64,18 +56,17 @@ export default function Keywords() {
                         keywords.map(key => 
                         <li>
                             {key}
-                            <Button 
-                                variant="contained" 
+                            <IconButton 
+                                aria-label="delete" 
                                 id={key}
-                                onClick={(e) => removeKeyword(e.target.id)} 
-                                size='sm'>
-                                    Del
-                                </Button>
+                                onClick={(e) => removeKeyword(key)} 
+                                >
+                                    <DeleteIcon fontSize="small" />
+                            </IconButton>
                         </li>)
                     }
                 </ul>
             }
-
             <br></br>
             <br></br>
             <h3>Add new keyword</h3>

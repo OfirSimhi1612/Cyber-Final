@@ -74,6 +74,7 @@ app.post('/alerts/read/:_id', async (req, res) => {
 
 app.delete('/alerts/keywords', async (req, res) => {
     try{
+        console.log(req.body)
         const updated = removeKeyword(req.body.keyword, req.body.user)
         res.send(Boolean(updated))
     } catch(err){

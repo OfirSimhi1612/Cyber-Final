@@ -57,8 +57,11 @@ router.post('/keywords', async (req, res) => {
 
 router.delete('/keywords', async (req, res) => {
     try{
+        console.log(req.body)
         const {data: keywords} = await axios.delete(alertsURL('keywords'), {
-            ...req.body
+            data: {
+                ...req.body
+              }
         })
         
         res.send(keywords)
