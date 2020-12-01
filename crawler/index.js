@@ -1,22 +1,29 @@
 const puppeteer = require('puppeteer')
 const { regAuthor, contentAnalys } = require('./analytics')
 const { Client } = require('@elastic/elasticsearch')
-const client = new Client({ node: process.env.ELS_URL || 'http://localhost:9200' })
+const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200' })
+
 const compare = require('./compare')
 
 const host = process.env.TOR_HOST || '127.0.0.1'
 const port = process.env.TOR_PORT || '9050' 
 
 async function crawler() {
-    
+  const args = ["--proxy-server=socks5://tor:9050", "--no-sandbox"];
+
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', `--proxy-server=socks5://${host}:${port}`]
+    args
   });
 
   const page = await browser.newPage();
+  
+  try{
+    await page.goto('http://nzxj65x32vh2fkhk.onion/all'); 
+  } catch(err){
+    console.log(err)
+  }
 
-  await page.goto('http://nzxj65x32vh2fkhk.onion/all');  
     let headers = await page.$$eval('#list > div > div > div.pre-info.pre-header > div > div.col-sm-5 > h4',
      h => h.map(header => (header.textContent)));
     
@@ -54,35 +61,53 @@ async function crawler() {
 }
 
 async function initialElastic(){
+  try{
     if(!(await client.indices.exists({index:'posts'})).body){
         await client.indices.create({
             index: 'posts',
         })
         console.log('added index: posts')
+        console.log('here')
+        return true
     }
-    return
+     return false
+  } catch(err){
+    console.log(err.body)
+  }
 }
 
 async function bulkPost(posts){
-    await initialElastic()
-    posts = await compare(posts)
+  try{
+    const isNew = await initialElastic()
+    if(!isNew){
+      posts = await compare(posts)
+    }
     const body = posts.flatMap(doc => [{ index: { _index: 'posts' } }, doc])
     if(body.length > 0){
         try{
             await client.bulk({
-                index: 'posts-test',
+                index: 'posts',
                 body: body
             })
         } catch(err){
             console.log(err.body.error)
         }
     }
+  } catch(err){
+    console.log(err.body)
+  }
+    
     
 }
 
 async function updateDataBase(){
+  try{
     const posts = await crawler()
     bulkPost(posts)
+  } catch(err){
+    console.log(err)
+  }
+    
 }
 
 

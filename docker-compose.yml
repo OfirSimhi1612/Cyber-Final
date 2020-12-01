@@ -2,44 +2,48 @@ version: '3.1'
 
 services: 
 
-  tor_proxy:
+  tor:
     image: dperson/torproxy
-    container_name: tor_proxy
+    hostname: tor
+    container_name: tor
+    environment: 
+      HOST_HOSTNAME: tor
     ports:
-      - 8182:8181
-      - 9051:9050
+      - 9050:9050
+      - 8118:8118
+    networks: 
+      - scrapper
   
-  elastic_search:
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
-    container_name: elastic_search
-    volumes: 
-      - elastic_db:/var/lib/mysql
     environment:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
+      - node.name=elasticsearch
+    logging: 
+        driver: none
     ports:
-      - 9301:9300
-      - 9201:9200
+      - 9200:9200
+      - 9300:9300
 
   crawler:
     build: 
       context: ./crawler
       dockerfile: Dockerfile
     container_name: crawler
-    depends_on: 
-      - elastic_search
+    links:
+      - tor:tor 
+    depends_on:
+      - tor
+      - elasticsearch
     environment: 
-      ELS_URL: http:cyber-final_elastic_search_1:9201
-      TOR_HOST: tor_proxy
-      TOR_PORT: 9051
-    command: ["./wait-for-it.sh", "elasticsearch:9201", "--", "node", "."]
-
-  # client:
-  #   build: 
-  #     context: ./client
-  #     dockerfile: Dockerfile
-  #   container_name: client 
+      ELS_URL: http://172.23.0.1:9200
+      TOR_HOST: tor
+      TOR_PORT: 9055
+    command: ['node', '.']
+    networks: 
+      - scrapper
 
   server:
     build: 
@@ -47,10 +51,9 @@ services:
       dockerfile: Dockerfile
     container_name: server
     depends_on: 
-      - elastic_search
-      - client
+      - elasticsearch
     environment: 
-      ELS_URL: http:cyber-final_elastic_search_1:9201
+      ELS_URL: http://172.23.0.1:9200
     command: ["./wait-for-it.sh", "elasticsearch:9201", "--", "node", "."]
     ports:
       - 8081:8080
@@ -59,8 +62,10 @@ services:
 volumes:
   elastic_db: 
     driver: local
-  
 
+networks:
+  scrapper:
+    driver: bridge
 
 
     
