@@ -14,6 +14,35 @@ async function getKeywords(user = 'root'){
     
 }
 
+async function addKeyword(keyword, user = 'root'){
+    try{
+        const oldKeywords = await Keyword.findOne({user: user})
+        if(!oldKeywords){
+            return false
+        }
+        const updated = await Keyword.update({user: user}, {keywords: [...oldKeywords.keywords, keyword]})
+
+        return updated
+    } catch(err){
+        console.log(err)
+    }
+}
+
+async function removeKeyword(keyword, user = 'root'){
+    try{
+        const oldKeywords = await Keyword.findOne({user: user}).exec()
+        if(!oldKeywords){
+            return false
+        }
+        oldKeywords.keywords.splice(oldKeywords.keywords.findIndex(k => k === keyword), 1)
+        const updated = await Keyword.update({user: user}, {keywords: [...oldKeywords.keywords]})
+
+        return updated
+    } catch(err){
+        console.log(err)
+    }
+}
+
 async function saveAlert(alert){
     alert.save((err, res) => {
         if(err){
@@ -87,5 +116,7 @@ async function saveError(error){
 module.exports = {
     processPosts,
     saveError,
-    getKeywords
+    getKeywords,
+    addKeyword,
+    removeKeyword
 }

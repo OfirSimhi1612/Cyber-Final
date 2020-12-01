@@ -41,6 +41,32 @@ router.post('/read/:_id', async (req, res) => {
     }
 })
 
+router.post('/keywords', async (req, res) => {
+    try{
+        const {data: keywords} = await axios.post(alertsURL('keywords'), {
+            ...req.body
+        })
+        
+        res.send(keywords)
+    } catch(err){
+        console.log(err)
+        res.status(500).send(false)
+    }
+})
+
+router.delete('/keywords', async (req, res) => {
+    try{
+        const {data: keywords} = await axios.delete(alertsURL('keywords'), {
+            ...req.body
+        })
+        
+        res.send(keywords)
+    } catch(err){
+        console.log(err)
+        res.status(500).send(false)
+    }
+})
+
 router.delete('/:_id', async (req, res) => {
     try{
         const {data: alerts} = await axios.delete(alertsURL(req.params._id))
@@ -51,5 +77,6 @@ router.delete('/:_id', async (req, res) => {
         res.status(500).send('error')
     }
 })
+
 
 module.exports = router
