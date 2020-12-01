@@ -9,6 +9,7 @@ const compare = require('./compare')
 
 const torHost = process.env.TOR_HOST || 'localhost'
 const torPort = process.env.TOR_PORT || '9050'
+
 const alertsHost = process.env.ALERTS_HOST || 'localhost'
 const alertsPort = process.env.ALERTS_PORT || '3001'
 
@@ -27,6 +28,7 @@ async function crawler() {
     await page.goto('http://nzxj65x32vh2fkhk.onion/all'); 
   } catch(err){
     console.log(err)
+    axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 
     let headers = await page.$$eval('#list > div > div > div.pre-info.pre-header > div > div.col-sm-5 > h4',
@@ -55,6 +57,7 @@ async function crawler() {
         }
       } catch(err){
         console.log(err)
+        axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
       }
     })
 
@@ -79,6 +82,7 @@ async function initialElastic(){
      return false
   } catch(err){
     console.log(err.body)
+    await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 }
 
@@ -97,6 +101,7 @@ async function bulkPost(posts){
             })
         } catch(err){
             console.log(err.body.error)
+            await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
         }
     }
     if(posts.length > 0){
@@ -105,6 +110,7 @@ async function bulkPost(posts){
 
   } catch(err){
     console.log(err.body)
+    await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
     
     
