@@ -7,11 +7,14 @@ const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200'
 
 const compare = require('./compare')
 
-const host = process.env.TOR_HOST || 'localhost'
+const torHost = process.env.TOR_HOST || 'localhost'
+const torPort = process.env.TOR_PORT || '9050'
 const alertsHost = process.env.ALERTS_HOST || 'localhost'
+const alertsPort = process.env.ALERTS_PORT || '3001'
+
 
 async function crawler() {
-  const args = [`--proxy-server=socks5://${host}:9050`, "--no-sandbox"];
+  const args = [`--proxy-server=socks5://${torHost}:${torPort}`, "--no-sandbox"];
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -97,7 +100,7 @@ async function bulkPost(posts){
         }
     }
     if(posts.length > 0){
-      await axios.post(`http://${alertsHost}:3001/post`, { posts: posts })
+      await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: posts })
     }
 
   } catch(err){
@@ -113,7 +116,7 @@ async function updateDataBase(){
     bulkPost(posts)
   } catch(err){
     console.log(err.message)
-    await axios.post(`http://${alertsHost}:3001/error`, { error: err.message })
+    await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 }
 
