@@ -28,11 +28,13 @@ async function searchPosts(query){
 }
 
 async function getLatest(){
+    const { body: {count : indexCount }  }  = await client.count({index: 'posts'})
+
     try{
         const results = await client.search({
            index: 'posts',
             sort: { "date" : "desc"},
-            size: 20
+            size: indexCount
         })
         return results.body.hits.hits.map(post => post._source)
     } catch(error){

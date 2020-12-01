@@ -52,7 +52,7 @@ root: {
 }))(MuiAccordionDetails);
 
 
-function Alerts() {
+function Alerts({setCount, count}) {
 
     const [alerts, setAlerts] = useState([])
     const [expanded, setExpanded] = React.useState();
@@ -69,7 +69,12 @@ function Alerts() {
         console.log('test')
     }, [])
 
-    useEffect(fetchAlerts, [])
+    useEffect(() => {
+        fetchAlerts()
+        const get = setInterval(fetchAlerts, 60000);
+
+        return () => clearInterval(get)
+    }, [])
 
     const readAlert = React.useCallback((id) => {
         fetch(`/api/alerts/read/${id}`, {
@@ -98,6 +103,7 @@ function Alerts() {
                 const index = tempAlerts.findIndex(alert => alert._id === id)
                 tempAlerts.splice(index, 1)
                 setAlerts(tempAlerts)
+                setCount(count -1)
             }
         })
         .catch(err => console.log(err))

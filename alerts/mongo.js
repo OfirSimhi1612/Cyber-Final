@@ -113,11 +113,23 @@ async function saveError(error){
     }
 }
 
+async function count(user){
+    try{
+        const alerts = await Alert.find({user: user})
+
+        return alerts.length
+    } catch(err){
+        console.log(err)
+        return false
+    }
+}
+
 
 module.exports = {
     processPosts,
     saveError,
     getKeywords,
     addKeyword,
-    removeKeyword
+    removeKeyword,
+    count
 }

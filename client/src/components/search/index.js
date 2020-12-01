@@ -4,8 +4,6 @@ import Post from '../posts';
 import { makeStyles } from '@material-ui/core/styles';
 
 
-
-
 const useStyles = makeStyles({
     search: {
         color: 'white',
@@ -47,7 +45,7 @@ export default function Search() {
             .then(res => setPosts(res))
             .catch(err => console.log(err))
         } 
-    }, 1000), [debounce])
+    }, 500), [debounce])
 
     useEffect(() => {
         search()
