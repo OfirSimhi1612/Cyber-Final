@@ -5,11 +5,11 @@ const client = new Client({ node: process.env.ELS_URL || 'http://127.0.0.1:9200'
 
 const compare = require('./compare')
 
-const host = process.env.TOR_HOST || '127.0.0.1'
+const host = process.env.TOR_HOST || 'localhost'
 const port = process.env.TOR_PORT || '9050' 
 
 async function crawler() {
-  const args = ["--proxy-server=socks5://tor:9050", "--no-sandbox"];
+  const args = ["--proxy-server=socks5://localhost:9050", "--no-sandbox"];
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -39,25 +39,26 @@ async function crawler() {
     let footers = await page.$$eval('#list > div > div > div.pre-info.pre-footer > div > div:nth-child(1)',
      options => options.map(option => (option.textContent).replace(/[\\n]+[\\t]+/g, '')));
 
-    const allPosts = headers.map(async (header, index) => {
+    let allPosts = headers.map((header, index) => {
       try{
         const f = footers[index].toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
-        const content_analys = await  contentAnalys(contents[index])
-        // console.log('here')
         return {
           header: header.toString().replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, ''),
           author: regAuthor(f.slice(0, f.indexOf(' at ')).replace('Posted by ', '')),
           content: contents[index],
           date: new Date(f.slice(f.indexOf(' at ') + 4)).getTime(),
-          analysis: content_analys
         }
       } catch(err){
         console.log(err)
       }
     })
 
+    for(let i = 0; i < allPosts.length; i++){
+      allPosts[i].analysis = await contentAnalys(allPosts[i].content)
+    }
+
     browser.close()
-    return await Promise.all(allPosts)
+    return allPosts
 }
 
 async function initialElastic(){
@@ -107,7 +108,6 @@ async function updateDataBase(){
   } catch(err){
     console.log(err)
   }
-    
 }
 
 
