@@ -102,7 +102,8 @@ async function saveError(error){
         const errAlert = new Alert({
             notification: 'The crawler has failed!',
             reason: error,
-            user: 'root'
+            user: 'root',
+            read: false
         })
         await saveAlert(errAlert)
         return true

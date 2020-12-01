@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Saerch from '../search';
 import Keywords from '../keywords'
-import Alerts from '../keywords'
+import Alerts from '../alerts'
 
 
 function TabPanel(props) {
@@ -99,8 +99,8 @@ export default function FullWidthTabs() {
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Keywords></Keywords>
         </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <Alerts/>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <Alerts></Alerts>
         </TabPanel>
       </SwipeableViews>
     </div>
