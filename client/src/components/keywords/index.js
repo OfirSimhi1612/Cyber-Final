@@ -18,7 +18,7 @@ export default function Keywords() {
         .catch(err => console.log(err))
     }, [])
 
-    const addKeyword = React.useCallback(() => {
+    const addKeyword = React.useCallback(async () => {
         fetch(`/api/alerts/keywords`, {
             method: 'POST',
             headers: {
@@ -28,10 +28,15 @@ export default function Keywords() {
               user: 'root',
               keyword: input
             })
-        }).then(res => fetchKeywords())
-    }, [input, fetchKeywords])
+        })
 
-    const removeKeyword = React.useCallback((keyword) => {
+        const temp = keywords.slice()
+        temp.push(input)
+        setKeywords(temp)
+        
+    }, [input, keywords])
+
+    const removeKeyword = React.useCallback(async (keyword, index) => {
         fetch(`/api/alerts/keywords`, {
             method: 'DELETE',
             headers: {
@@ -41,7 +46,11 @@ export default function Keywords() {
               user: 'root',
               keyword: keyword
             })
-        }).then(res => fetchKeywords())
+        }) 
+
+        const temp = keywords.slice()
+        temp.splice(index, 1)
+        setKeywords(temp)
     }, [keywords, fetchKeywords])
 
     useEffect(fetchKeywords, [fetchKeywords])
@@ -53,13 +62,13 @@ export default function Keywords() {
             {keywords.length > 0 &&
                 <ul>
                     {
-                        keywords.map(key => 
+                        keywords.map((key, index) => 
                         <li>
                             {key}
                             <IconButton 
                                 aria-label="delete" 
                                 id={key}
-                                onClick={(e) => removeKeyword(key)} 
+                                onClick={(e) => removeKeyword(key, index)} 
                                 >
                                     <DeleteIcon fontSize="small" />
                             </IconButton>

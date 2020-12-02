@@ -41,9 +41,9 @@ services:
     environment: 
       TOR_HOST: tor
       TOR_PORT: 9050
-      ALERTS_HOST: 192.168.16.1
+      ALERTS_HOST: 172.17.0.1
       ALERTS_PORT: 3002
-      NER_HOST: 192.168.16.1
+      NER_HOST: 172.17.0.1
       NER_PORT: 9000
     command: ['node', '.']
     ports:
@@ -59,10 +59,10 @@ services:
     depends_on: 
       - elasticsearch
     environment: 
-      ELS_URL: http://192.168.16.1:9201
-      CRAWLER_HOST: 192.168.16.1
+      ELS_URL: http://172.17.0.1:9201
+      CRAWLER_HOST: 172.17.0.1
       CRAWLER_PORT: 4001
-      ALERTS_HOST: 192.168.16.1
+      ALERTS_HOST: 172.17.0.1
       ALERTS_PORT: 3002
     ports:
       - 8081:8080
