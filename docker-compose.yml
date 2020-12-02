@@ -9,8 +9,8 @@ services:
     environment: 
       HOST_HOSTNAME: tor
     ports:
-      - 9050:9050
-      - 8118:8118
+      - 9051:9050
+      - 8128:8118
     networks: 
       - scrapper
   
@@ -24,8 +24,8 @@ services:
     logging: 
         driver: none
     ports:
-      - 9200:9200
-      - 9300:9300
+      - 9201:9200
+      - 9301:9300
 
   crawler:
     build: 
@@ -36,11 +36,9 @@ services:
       - tor:tor 
     depends_on:
       - tor
-      - elasticsearch
     environment: 
-      ELS_URL: http://172.23.0.1:9200
       TOR_HOST: tor
-      TOR_PORT: 9055
+      TOR_PORT: 9051
     command: ['node', '.']
     networks: 
       - scrapper
@@ -53,7 +51,11 @@ services:
     depends_on: 
       - elasticsearch
     environment: 
-      ELS_URL: http://172.23.0.1:9200
+      ELS_URL: http://172.23.0.1:9201
+      CRAWLER_HOST: 172.23.0.1
+      CRAWLER_PORT: 4001
+      ALERTS_HOST: 172.23.0.1
+      ALERTS_PORT: 3001
     command: ["./wait-for-it.sh", "elasticsearch:9201", "--", "node", "."]
     ports:
       - 8081:8080
