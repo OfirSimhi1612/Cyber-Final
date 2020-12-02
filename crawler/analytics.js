@@ -1,15 +1,10 @@
 const Sentiment = require('sentiment');
 const sentiment = new Sentiment(); 
-// const NER = require('ner');
-const util = require('util');
+const axios = require('axios')
 
+const nerHost = process.env.NER_HOST || 'localhost'
+const nerPort = process.env.NER_PORT || '9000'
 
-// const ner = new NER({
-//     port:9191,
-//     host:'localhost'
-// })
-
-// const getEntities = util.promisify(ner.get).bind(ner)
 
 
 function regAuthor(author){
@@ -25,13 +20,13 @@ function regAuthor(author){
 async function contentAnalys(content){
     content = content.join(', ')
     try{
-        // const entities = await getEntities(content)
+        const {data: entities} = await axios.post(`http://${nerHost}:${nerPort}`, {text: content})
         const SentimentAnalysis = sentiment.analyze(content);
         return {
             score: SentimentAnalysis.comparative, 
             neg_words: SentimentAnalysis.negative,
             pos_words: SentimentAnalysis.positive,
-            // entities: entities.entities
+            entities: entities
         }
     } catch(error){
         console.log(error)

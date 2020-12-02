@@ -16,7 +16,6 @@ async function initialElastic(){
               index: 'posts',
           })
           console.log('added index: posts')
-          console.log('here')
           return true
       }
        return false

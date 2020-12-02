@@ -3,10 +3,7 @@ FROM node:12
 WORKDIR /app/server
 
 ADD package.json package.json
-RUN npm install
-
-ADD wait-for-it.sh wait-for-it.sh
-RUN chmod +x wait-for-it.sh 
+RUN npm install 
 
 COPY . .
 

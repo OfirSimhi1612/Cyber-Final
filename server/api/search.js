@@ -9,7 +9,6 @@ const router = Router()
 router.get('/latest', async (req, res) => {
     try{
         const latest_posts = await getLatest()
-        console.log(latest_posts)
         res.send(latest_posts)
     } catch(err){
         console.log(err)

@@ -54,7 +54,6 @@ router.post('/read/:_id', async (req, res) => {
 
 router.post('/keywords', async (req, res) => {
     try{
-        console.log(req.body)
         const {data: keywords} = await axios.post(alertsURL('keywords'), {
             ...req.body
         })
@@ -68,7 +67,6 @@ router.post('/keywords', async (req, res) => {
 
 router.delete('/keywords', async (req, res) => {
     try{
-        console.log(req.body)
         const {data: keywords} = await axios.delete(alertsURL('keywords'), {
             data: {
                 ...req.body
