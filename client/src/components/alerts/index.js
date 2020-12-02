@@ -87,10 +87,11 @@ function Alerts({setCount, count}) {
                 const Alert = tempAlerts.find(alert => alert._id === id)
                 Alert.read = true
                 setAlerts(tempAlerts)
+                setCount(count -1)
             }
         })
         .catch(err => console.log(err))
-    }, [alerts])
+    }, [alerts, count])
 
     const removeAlert = React.useCallback((id) => {
         fetch(`/api/alerts/${id}`, {
@@ -101,13 +102,16 @@ function Alerts({setCount, count}) {
             if(res){
                 const tempAlerts = alerts.slice()
                 const index = tempAlerts.findIndex(alert => alert._id === id)
+                if(!tempAlerts[index].read){
+                    setCount(count -1)
+                }
                 tempAlerts.splice(index, 1)
                 setAlerts(tempAlerts)
-                setCount(count -1)
+                setExpanded(false);
             }
         })
         .catch(err => console.log(err))
-    }, [alerts])
+    }, [alerts, count])
 
     return (
         <div>

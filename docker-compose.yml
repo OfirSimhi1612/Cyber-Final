@@ -60,6 +60,15 @@ services:
     ports:
       - 8081:8080
 
+  alerts: 
+    build: 
+      context: ./alerts
+      dockerfile: Dockerfile
+    container_name: alerts
+    ports: 
+      - 3002:3001
+
+
 volumes:
   elastic_db: 
     driver: local
