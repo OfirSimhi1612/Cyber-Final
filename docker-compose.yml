@@ -40,7 +40,9 @@ services:
     environment: 
       ELS_URL: http://172.23.0.1:9200
       TOR_HOST: tor
-      TOR_PORT: 9055
+      TOR_PORT: 9050
+      ALERTS_HOST: 172.23.0.1
+      ALERTS_PORT: 3002
     command: ['node', '.']
     networks: 
       - scrapper
@@ -57,6 +59,15 @@ services:
     command: ["./wait-for-it.sh", "elasticsearch:9201", "--", "node", "."]
     ports:
       - 8081:8080
+
+  alerts: 
+    build: 
+      context: ./alerts
+      dockerfile: Dockerfile
+    container_name: alerts
+    ports: 
+      - 3002:3001
+
 
 volumes:
   elastic_db: 

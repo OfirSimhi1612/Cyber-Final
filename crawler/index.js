@@ -64,7 +64,6 @@ async function crawler() {
     for(let i = 0; i < allPosts.length; i++){
       allPosts[i].analysis = await contentAnalys(allPosts[i].content)
     }
-
     browser.close()
     return allPosts
 }
@@ -107,13 +106,10 @@ async function bulkPost(posts){
     if(posts.length > 0){
       await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: posts })
     }
-
   } catch(err){
     console.log(err.body)
     await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
-    
-    
 }
 
 async function updateDataBase(){
@@ -125,7 +121,6 @@ async function updateDataBase(){
     await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
   }
 }
-
 
 setInterval(updateDataBase, 30000)
 
