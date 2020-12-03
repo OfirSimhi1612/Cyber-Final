@@ -1,0 +1,84 @@
+# --- # Stronhold Paste 
+#   name: "Stronhold Paste"
+#   url: "http://nzxj65x32vh2fkhk.onion/all"
+#   network: "tor"
+#   https: false
+#   navigation: null 
+#   pathes: 
+#     list: section[id=list]
+#     container: div[class=col-sm-12]
+#     title: 
+#       selector: div[class=col-sm-5]
+#       position: null 
+#     content: 
+#       selector: ol
+#       position: null
+#     date: 
+#       selector: div[class=col-sm-6]
+#       position: 
+#         start: ' at '
+#         end: null
+#     author: 
+#       selector: div[class=col-sm-6]
+#       position: 
+#         start: 10
+#         end: ' at '
+
+# --- # /paste.scratchbook - trending 
+# name: "paste.scratchbook - Trending"
+# url: "https://paste.scratchbook.ch/trends"
+# network: null
+# https: true
+# navigation: # if need to navigate to different route
+#   link: a # element with 'href' property
+#   relative: false
+#   inner-container: null
+# pathes: 
+#   list: tbody
+#   container: td[class=first]
+#   title: 
+#     selector: h1.pagetitle.right
+#     position: null 
+#   content: 
+#     selector: ol
+#     position: null
+#   date: 
+#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+#     position: 
+#       start: ', '
+#       end: ' ago,'
+#   author: 
+#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+#     position: 
+#       start: 'From '
+#       end: ', '
+
+
+# --- # /paste.scratchbook - recent 
+# name: "paste.scratchbook - Recent"
+# url: "https://paste.scratchbook.ch/lists"
+# network: null
+# https: true
+# navigation: # if need to navigate to different route
+#   link: a # element with 'href' property
+#   relative: false
+#   inner-container: null
+# pathes: 
+#   list: tbody
+#   container: td[class=first]
+#   title: 
+#     selector: h1.pagetitle.right
+#     position: null 
+#   content: 
+#     selector: ol
+#     position: null
+#   date: 
+#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+#     position: 
+#       start: ', '
+#       end: ' ago,'
+#   author: 
+#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+#     position: 
+#       start: 'From '
+#       end: ', '
