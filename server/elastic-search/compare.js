@@ -3,13 +3,12 @@ const client = new Client({ node: process.env.ELS_URL || 'http://localhost:9200'
 
 async function compare(posts){
     try{
-        const { body: {count : indexCount }  }  = await client.count({index: 'posts'})
+        const { body: {count : indexCount }  }  = await client.count({index: 'posts_test'})
         if(indexCount > 0){
             const results = await client.search({
-                index: 'posts', 
+                index: 'posts_test', 
                 size: indexCount,
-                sort: "date" 
-            })
+                sort: "date" })
             
             const oldPosts = results.body.hits.hits.map(post => post._source)
             

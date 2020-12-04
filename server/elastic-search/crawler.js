@@ -9,11 +9,14 @@ const alertsPort = process.env.ALERTS_PORT || '3001'
 const crawlerHost = process.env.CRAWLER_HOST || 'localhost'
 const crawlerPort = process.env.CRAWLER_PORT || '4001'
 
+const selHost = process.env.SELF_HOST || 'localhost'
+const selfPort = process.env.SELF_HOST || '8080'
+
 async function initialElastic(){
     try{
-      if(!(await client.indices.exists({index:'posts'})).body){
+      if(!(await client.indices.exists({index:'posts_test'})).body){
           await client.indices.create({
-              index: 'posts',
+              index: 'posts_test',
           })
           console.log('added index: posts')
           return true
@@ -30,11 +33,11 @@ try{
     if(!isNew){
     posts = await compare(posts)
     }
-    const body = posts.flatMap(doc => [{ index: { _index: 'posts' } }, doc])
+    const body = posts.flatMap(doc => [{ index: { _index: 'posts_test' } }, doc])
     if(body.length > 0){
         try{
             await client.bulk({
-                index: 'posts',
+                index: 'posts_test',
                 body: body
             })
         } catch(err){
@@ -56,8 +59,12 @@ try{
 
 async function updateDataBase(){
 try{
-    const { data } = await axios.get(`http://${crawlerHost}:${crawlerPort}/crawl`)
-    bulkPost(data)
+    axios.get(`http://${crawlerHost}:${crawlerPort}/crawl`, {
+        params: {
+            resURL: `http://${selHost}:${selfPort}/api/search/updateDB`
+        }
+    })
+    console.log('sent request to crawler server')
 } catch(err){
     console.log(err.message)
     await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
@@ -65,4 +72,7 @@ try{
 }
 
 
-module.exports = updateDataBase
+module.exports = {
+    updateDataBase,
+    bulkPost
+}

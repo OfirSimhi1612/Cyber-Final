@@ -7,10 +7,10 @@ const MONTH = DAY * 30 // not accurate
 const YEAR = DAY * 365
 
 function dateParser(date){
-    const d = new Date(date)
+    const d = new Date(date.toLowerCase().replace('rd', '').replace('th', ''))
     if (Object.prototype.toString.call(d) === "[object Date]") {
         if (isNaN(d.getTime())) {  // d.valueOf() could also work
-          return wordsToDate(date)
+          return wordsToDate(date.replace(/\u00a0/g, " ").toLowerCase())
         } else {
           return d.getTime()
         }
@@ -22,33 +22,33 @@ function dateParser(date){
 function wordsToDate(date){
     const unit = date.split(' ')
     switch (unit[1]){
-        case 'Years':
+        case 'years':
             return Date.now() - unit[0] * YEAR
-        case 'Year':
+        case 'year':
             return Date.now() - unit[0] * YEAR
-        case 'Months':
+        case 'months':
             return Date.now() - unit[0] * MONTH
-        case 'Month':
+        case 'month':
             return Date.now() - unit[0] * MONTH
-        case 'Weeks':
+        case 'weeks':
             return Date.now() - unit[0] * WEEK
-        case 'Week':
+        case 'week':
             return Date.now() - unit[0] * WEEK
-        case 'Days':
+        case 'days':
             return Date.now() - unit[0] * DAY
-        case 'Day':
+        case 'day':
             return Date.now() - unit[0] * DAY
-        case 'Hours':
+        case 'hours':
             return Date.now() - unit[0] * HOUR
-        case 'Hour':
+        case 'hour':
             return Date.now() - unit[0] * HOUR
-        case 'Minutes':
+        case 'minutes':
             return Date.now() - unit[0] * MIN
-        case 'Minute':
+        case 'minute':
             return Date.now() - unit[0] * MIN
-        case 'Seconds':
+        case 'seconds':
             return Date.now() - unit[0] * SEC
-        case 'Second':
+        case 'second':
             return Date.now() - unit[0] * SEC
     }
 }
