@@ -17,7 +17,7 @@ async function crawl(resURL){
             posts = [...posts, ...newPosts]
         }
     
-        // console.log(posts.length)
+        console.log(posts.length)
 
         axios.post(resURL, { posts })
 

@@ -7,7 +7,9 @@ const MONTH = DAY * 30 // not accurate
 const YEAR = DAY * 365
 
 function dateParser(date){
-    const d = new Date(date.toLowerCase().replace('rd', '').replace('th', ''))
+    // console.log(date)
+    // console.log(new Date(date.toLowerCase().replace('rd', '').replace('th', '')))
+    const d = new Date(date.toLowerCase().replace('rd', '').replace('th', '').replace('edited', ''))
     if (Object.prototype.toString.call(d) === "[object Date]") {
         if (isNaN(d.getTime())) {  // d.valueOf() could also work
           return wordsToDate(date.replace(/\u00a0/g, " ").toLowerCase())

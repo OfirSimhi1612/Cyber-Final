@@ -3,6 +3,7 @@ const axios = require('axios')
 const tor_axios = require('tor-axios');
 const cheerio = require('cheerio');
 const dateParser = require('./helpers/DateCovert')
+const md5 = require('md5')
  
 
 const torHost = process.env.TOR_HOST || 'localhost'
@@ -37,15 +38,17 @@ function getContainerContent(element, config, posts){
   const datePosition = config.pathes.date && config.pathes.date.position 
   const authorPosition = config.pathes.author && config.pathes.author.position
    
-  // console.log(rTN(title))
-
   if(title.length > 0 && content.length > 0){
-    posts.push({
+    const post = {
+      host: config.name,
       title: rTN(title),
       content: content,
-      author: author ?  cSlice(rTN(author), authorPosition.start, authorPosition.end) : 'Anonymous',
+      author: author ?  regAuthor(cSlice(rTN(author), authorPosition.start, authorPosition.end)) : 'Anonymous',
       date: date ? dateParser(cSlice(rTN(date), datePosition.start, datePosition.end)) : 0
-    })
+    }
+  
+    post.id = md5(JSON.stringify(post)) //change hashig to 128
+    posts.push(post)
   }
 }
 

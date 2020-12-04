@@ -29,17 +29,19 @@ async function initialElastic(){
   
 async function bulkPost(posts){
 try{
-    const isNew = await initialElastic()
-    if(!isNew){
-    posts = await compare(posts)
-    }
-    const body = posts.flatMap(doc => [{ index: { _index: 'posts_test' } }, doc])
+    await initialElastic()
+    // if(!isNew){
+    //     posts = await compare(posts)
+    // }
+    console.log(posts.length, 'posts')
+    const body = posts.flatMap(doc => [{ index: { _index: 'posts_test', _id: doc.id} }, doc])
     if(body.length > 0){
         try{
-            await client.bulk({
+            const res = await client.bulk({
                 index: 'posts_test',
                 body: body
             })
+            // console.log(res)
         } catch(err){
             console.log(err.body.error)
             await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
