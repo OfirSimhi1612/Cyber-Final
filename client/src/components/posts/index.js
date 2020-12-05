@@ -43,14 +43,14 @@ export default function Post({post}) {
     }
 
     const classes = useStyles(props);
-
+    console.log()
     return (
       <Paper className={classes.root} square>
         <Typography  color="textSecondary" gutterBottom>
-          <span className={classes.title}>{post.header}</span>  <span class={classes.author}>{post.author}</span>
+          <span className={classes.title}>{post.title}</span>  <span class={classes.author}>{post.author}</span>
         </Typography>
         <Typography className={classes.content} color="textSecondary">
-          {post.content.join('\n')}
+          {post.content.slice(0, 500)}
         </Typography>
         <Typography className={classes.date}>
           {new Date(post.date).toUTCString()}

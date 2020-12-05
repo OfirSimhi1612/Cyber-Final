@@ -5,12 +5,11 @@ const crawl = require('./exec')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 
 app.get('/crawl', async (req, res) => {
     try{
-        console.log('recived request from api')
         const resURL = req.query.resURL
         crawl(resURL)
 

@@ -28,7 +28,7 @@ router.get('/:query', async (req, res) => {
 
 router.post('/updateDB', async (req, res) => {
     try{
-        await bulkPost(req.body.posts)
+        const response = await bulkPost(req.body.posts)
         res.send(true)
     } catch(err){
         console.log(err)

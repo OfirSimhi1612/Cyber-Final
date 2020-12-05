@@ -7,7 +7,7 @@ async function searchPosts(query){
         const { body: {count : indexCount }  }  = await client.count({index: 'posts'})
 
         const results = await client.search({
-           index: 'posts',
+           index: 'posts_test',
            body: {
                 query: {
                     multi_match : {
@@ -27,13 +27,12 @@ async function searchPosts(query){
 }
 
 async function getLatest(){
-    const { body: {count : indexCount }  }  = await client.count({index: 'posts'})
 
     try{
         const results = await client.search({
-           index: 'posts',
+           index: 'posts_test',
             sort: { "date" : "desc"},
-            size: indexCount
+            size: 100
         })
         return results.body.hits.hits.map(post => post._source)
     } catch(error){

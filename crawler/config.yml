@@ -33,12 +33,13 @@ navigation: # if need to navigate to different route
   link: a # element with 'href' property
   relative: false
   inner-container: null
-# pagination:
-#   container: div[class=pages]
-#   unit: a
-#   jumps: 1
-#   start: 1
-pathes: 
+pagination:
+  container: div[class=pages]
+  current: div#container > div > div.content > div > div.pages > strong
+  isChild: false
+  link: a
+  relative: false
+pathes:
   list: tbody
   container: td[class=first]
   title: 
@@ -68,6 +69,12 @@ navigation: # if need to navigate to different route
   link: a # element with 'href' property
   relative: false
   inner-container: null
+pagination:
+  container: div[class=pages]
+  current: div#container > div > div.content > div > div.pages > strong
+  isChild: false
+  link: a
+  relative: false
 pathes: 
   list: tbody
   container: td[class=first]
@@ -91,13 +98,21 @@ pathes:
 
 --- # ideone - Recent 
 name: "ideone - Recent"
-url: "https://ideone.com/recent"
+url: "https://ideone.com/recent/38"
 network: null
 https: true
 navigation: # if need to navigate to different route
   link: a # element with 'href' property
   relative: https://ideone.com
   inner-container: null
+pagination:
+  container: div[class=pagination] > ul
+  current: div#recent_pager_down > div > div > ul > li > span
+  isChild: true
+  link: a
+  parent: li
+  relative: true
+  base: https://ideone.com
 pathes: 
   list: div[class=span8]
   container: div[class=source-view]

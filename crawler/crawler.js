@@ -3,7 +3,8 @@ const axios = require('axios')
 const tor_axios = require('tor-axios');
 const cheerio = require('cheerio');
 const dateParser = require('./helpers/DateCovert')
-const md5 = require('md5')
+const md5 = require('md5');
+const crawl = require('./exec');
  
 
 const torHost = process.env.TOR_HOST || 'localhost'
@@ -47,7 +48,7 @@ function getContainerContent(element, config, posts){
       date: date ? dateParser(cSlice(rTN(date), datePosition.start, datePosition.end)) : 0
     }
   
-    post.id = md5(JSON.stringify(post)) //change hashig to 128
+    post.id = md5(JSON.stringify(post.title + post.content + post.author)) //change hashig to 128
     posts.push(post)
   }
 }
@@ -60,7 +61,7 @@ async function getContainerFromLink(link, config){
 }
 
 async function crawler(config) {
-  
+  console.log(config.url)
   const fetch = config.network === 'tor' ? tor.get : axios.get
 
   let posts = [];
@@ -81,22 +82,31 @@ async function crawler(config) {
         getContainerContent(container, config, posts)
     }
 
-    // for(let post of posts){
-    //   post.analysis = await contentAnalys(post.content)
+    // if(config.pagination){
+    //   let next
+    //   if(config.pagination.isChild){
+    //     next = $(config.pagination.current).closest(config.pagination.parent).next().find(config.pagination.link).attr('href')
+    //   } else {
+    //     next = $(config.pagination.current).next().attr('href')
+    //   }
+  
+    //   if(next){
+    //     return posts + await crawler({...config, url: config.pagination.relative ? config.pagination.base + next : next})
+    //   } else {
+    //     console.log('finished')
+    //     return posts
+    //   }
+    // } else{
+    //   return posts
     // }
 
-    // if(config.pagination){
-    //   const container = $(config.pagination.container)
+    return posts
+    
       
-    // }
   } catch(err){
     axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: `${config.name}: ${err.message}` })
     console.log(err.message)
   }
-
-  // console.log(posts[0])
-  return posts
-
 }
 
 
