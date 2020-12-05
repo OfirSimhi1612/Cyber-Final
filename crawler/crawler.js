@@ -3,9 +3,7 @@ const axios = require('axios')
 const tor_axios = require('tor-axios');
 const cheerio = require('cheerio');
 const dateParser = require('./helpers/DateCovert')
-const md5 = require('md5');
-const crawl = require('./exec');
- 
+const md5 = require('md5'); 
 
 const torHost = process.env.TOR_HOST || 'localhost'
 const torPort = process.env.TOR_PORT || '9050'
@@ -20,6 +18,10 @@ const tor = tor_axios.torSetup({
 
 function rTN(str){
   return str.replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
+}
+
+function dateSignature(date){
+  return new Date(date).toJSON().slice(0, 10)
 }
 
 function cSlice(text, start, end){
@@ -48,7 +50,7 @@ function getContainerContent(element, config, posts){
       date: date ? dateParser(cSlice(rTN(date), datePosition.start, datePosition.end)) : 0
     }
   
-    post.id = md5(JSON.stringify(post.title + post.content + post.author)) //change hashig to 128
+    post.id = md5(JSON.stringify(post.title + post.content + post.author)) +  dateSignature(post.date)//change hashig to 128
     posts.push(post)
   }
 }

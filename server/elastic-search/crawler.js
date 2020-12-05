@@ -31,21 +31,25 @@ async function bulkPost(posts){
 try{
     await initialElastic()
     console.log('recived ' + posts.length + ' posts!')
-    const body = posts.flatMap(doc => [{ index: { _index: 'posts_test', _id: doc.id} }, doc])
+    const body = posts.flatMap(doc => [{ index: { _index: 'posts_test', _id: doc.id, op_type: 'create'} }, doc])
     if(body.length > 0){
         try{
-            await client.bulk({
+            const response = await client.bulk({
                 index: 'posts_test',
-                body: body
+                body: body,
             })
+
+            const newPosts = response.body.items.filter(post => post.create.status === 201)// 201 - created
+            // 409 - already exists
+            if(posts.length > 0){
+                await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: newPosts })
+            }
         } catch(err){
             console.log(err.body)
             await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
         }
     }
-    // if(posts.length > 0){
-    //     await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: posts })
-    // }
+    
 
 } catch(err){
     console.log(err.body)

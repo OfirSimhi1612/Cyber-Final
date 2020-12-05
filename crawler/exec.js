@@ -22,6 +22,4 @@ async function crawl(resURL){
     }
 } 
 
-crawl()
-
 module.exports = crawl

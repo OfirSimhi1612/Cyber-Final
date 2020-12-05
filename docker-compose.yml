@@ -1,5 +1,4 @@
 version: '3.1'
-
 services: 
 
   tor:
@@ -94,10 +93,6 @@ services:
       - 9000:9000
     networks: 
       - scrapper
-
-volumes:
-  elastic_db: 
-    driver: local
 
 networks:
   scrapper:
