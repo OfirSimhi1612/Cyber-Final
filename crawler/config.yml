@@ -24,135 +24,135 @@
         start: 10
         end: ' at '
 
-# --- # /paste.scratchbook - trending 
-# name: "paste.scratchbook - Trending"
-# url: "https://paste.scratchbook.ch/trends"
-# network: null
-# https: true
-# navigation: # if need to navigate to different route
-#   link: a # element with 'href' property
-#   relative: false
-#   inner-container: null
-# pagination:
-#   container: div[class=pages]
-#   current: div#container > div > div.content > div > div.pages > strong
-#   isChild: false
-#   link: a
-#   relative: false
-# pathes:
-#   list: tbody
-#   container: td[class=first]
-#   title: 
-#     selector: h1.pagetitle.right
-#     position: null 
-#   content: 
-#     selector: ol
-#     position: null
-#   date: 
-#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
-#     position: 
-#       start: ', '
-#       end: ' ago,'
-#   author: 
-#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
-#     position: 
-#       start: 'From '
-#       end: ', '
+--- # /paste.scratchbook - trending 
+name: "paste.scratchbook - Trending"
+url: "https://paste.scratchbook.ch/trends/38960"
+network: null
+https: true
+navigation: # if need to navigate to different route
+  link: a # element with 'href' property
+  relative: false
+  inner-container: null
+pagination:
+  container: div[class=pages]
+  current: div#container > div > div.content > div > div.pages > strong
+  isChild: false
+  link: a
+  relative: false
+pathes:
+  list: tbody
+  container: td[class=first]
+  title: 
+    selector: h1.pagetitle.right
+    position: null 
+  content: 
+    selector: ol
+    position: null
+  date: 
+    selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+    position: 
+      start: ', '
+      end: ' ago,'
+  author: 
+    selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+    position: 
+      start: 'From '
+      end: ', '
 
 
-# --- # /paste.scratchbook - recent 
-# name: "paste.scratchbook - Recent"
-# url: "https://paste.scratchbook.ch/lists"
-# network: null
-# https: true
-# navigation: # if need to navigate to different route
-#   link: a # element with 'href' property
-#   relative: false
-#   inner-container: null
-# pagination:
-#   container: div[class=pages]
-#   current: div#container > div > div.content > div > div.pages > strong
-#   isChild: false
-#   link: a
-#   relative: false
-# pathes: 
-#   list: tbody
-#   container: td[class=first]
-#   title: 
-#     selector: h1.pagetitle.right
-#     position: null 
-#   content: 
-#     selector: ol
-#     position: null
-#   date: 
-#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
-#     position: 
-#       start: ', '
-#       end: ' ago,'
-#   author: 
-#     selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
-#     position: 
-#       start: 'From '
-#       end: ', '
+--- # /paste.scratchbook - recent 
+name: "paste.scratchbook - Recent"
+url: "https://paste.scratchbook.ch/lists/38940"
+network: null
+https: true
+navigation: # if need to navigate to different route
+  link: a # element with 'href' property
+  relative: false
+  inner-container: null
+pagination:
+  container: div[class=pages]
+  current: div#container > div > div.content > div > div.pages > strong
+  isChild: false
+  link: a
+  relative: false
+pathes: 
+  list: tbody
+  container: td[class=first]
+  title: 
+    selector: h1.pagetitle.right
+    position: null 
+  content: 
+    selector: ol
+    position: null
+  date: 
+    selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+    position: 
+      start: ', '
+      end: ' ago,'
+  author: 
+    selector: div#container > div > div.content > div > div > div > div.meta > span.detail.by
+    position: 
+      start: 'From '
+      end: ', '
 
 
-# --- # ideone - Recent 
-# name: "ideone - Recent"
-# url: "https://ideone.com/recent"
-# network: null
-# https: true
-# navigation: # if need to navigate to different route
-#   link: a # element with 'href' property
-#   relative: https://ideone.com
-#   inner-container: null
-# pagination:
-#   container: div[class=pagination] > ul
-#   current: div#recent_pager_down > div > div > ul > li > span
-#   isChild: true
-#   link: a
-#   parent: li
-#   relative: true
-#   base: https://ideone.com
-# pathes: 
-#   list: div[class=span8]
-#   container: div[class=source-view]
-#   title: 
-#     selector: div#info > legend:nth-child(1)
-#   content: 
-#     selector: pre#source > pre > ol
-#   date: 
-#     selector: div#solution_date > span
-#     position: 
-#       start: null
-#       end: ago
-#   author: null
+--- # ideone - Recent 
+name: "ideone - Recent"
+url: "https://ideone.com/recent/38"
+network: null
+https: true
+navigation: # if need to navigate to different route
+  link: a # element with 'href' property
+  relative: https://ideone.com
+  inner-container: null
+pagination:
+  container: div[class=pagination] > ul
+  current: div#recent_pager_down > div > div > ul > li > span
+  isChild: true
+  link: a
+  parent: li
+  relative: true
+  base: https://ideone.com
+pathes: 
+  list: div[class=span8]
+  container: div[class=source-view]
+  title: 
+    selector: div#info > legend:nth-child(1)
+  content: 
+    selector: pre#source > pre > ol
+  date: 
+    selector: div#solution_date > span
+    position: 
+      start: null
+      end: ago
+  author: null
     
 
-# --- # /pastebin 
-# name: "pastebin"
-# url: "https://pastebin.com/archive"
-# network: null
-# https: true
-# navigation: # if need to navigate to different route
-#   link: a # element with 'href' property
-#   relative: https://pastebin.com
-#   inner-container: null
-# pathes: 
-#   list: tbody
-#   container: tr > td:nth-child(1)
-#   title: 
-#     selector: body > div.wrap > div.container > div.content > div.post-view > div.details > div.info-bar > div.info-top > h1
-#     position: null 
-#   content: 
-#     selector: body > div.wrap > div.container > div.content > div.post-view > div.highlighted-code > div.source > ol
-#     position: null
-#   date: 
-#     selector: body > div.wrap > div.container > div.content > div.post-view > div.details > div.info-bar > div.info-bottom > div.date > span
-#     position: 
-#       start: null
-#       end: null
-#   author: 
-#     selector: body > div.wrap > div.container > div.content > div.post-view > div.details > div.info-bar > div.info-bottom > div.username > a
-#     position: 
-#       start: null
-#       end: null
+--- # /pastebin 
+name: "pastebin"
+url: "https://pastebin.com/archive"
+network: null
+https: true
+navigation: # if need to navigate to different route
+  link: a # element with 'href' property
+  relative: https://pastebin.com
+  inner-container: null
+pathes: 
+  list: tbody
+  container: tr > td:nth-child(1)
+  title: 
+    selector: body > div.wrap > div.container > div.content > div.post-view > div.details > div.info-bar > div.info-top > h1
+    position: null 
+  content: 
+    selector: body > div.wrap > div.container > div.content > div.post-view > div.highlighted-code > div.source > ol
+    position: null
+  date: 
+    selector: body > div.wrap > div.container > div.content > div.post-view > div.details > div.info-bar > div.info-bottom > div.date > span
+    position: 
+      start: null
+      end: null
+  author: 
+    selector: body > div.wrap > div.container > div.content > div.post-view > div.details > div.info-bar > div.info-bottom > div.username > a
+    position: 
+      start: null
+      end: null

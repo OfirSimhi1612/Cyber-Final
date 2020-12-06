@@ -38,7 +38,7 @@ try{
                 index: 'posts_test',
                 body: body,
             })
-
+            console.log(response.body.items[0])
             const newPosts = response.body.items.filter(post => post.create.status === 201)// 201 - created
             // 409 - already exists
             if(posts.length > 0){

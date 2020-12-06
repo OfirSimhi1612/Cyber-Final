@@ -15,7 +15,7 @@ async function crawl(resURL){
             const newPosts = await crawler(config[i])
             posts = [...posts, ...newPosts]
         }
-    
+        console.log('finished')
         axios.post(resURL, { posts })
     } catch (e) {
         console.log(e);

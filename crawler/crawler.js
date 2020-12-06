@@ -84,25 +84,25 @@ async function crawler(config) {
         getContainerContent(container, config, posts)
     }
 
-    // if(config.pagination){
-    //   let next
-    //   if(config.pagination.isChild){
-    //     next = $(config.pagination.current).closest(config.pagination.parent).next().find(config.pagination.link).attr('href')
-    //   } else {
-    //     next = $(config.pagination.current).next().attr('href')
-    //   }
+    if(config.pagination){
+      let next
+      if(config.pagination.isChild){
+        next = $(config.pagination.current).closest(config.pagination.parent).next().find(config.pagination.link).attr('href')
+      } else {
+        next = $(config.pagination.current).next().attr('href')
+      }
   
-    //   if(next){
-    //     return posts + await crawler({...config, url: config.pagination.relative ? config.pagination.base + next : next})
-    //   } else {
-    //     console.log('finished')
-    //     return posts
-    //   }
-    // } else{
-    //   return posts
-    // }
+      if(next){
+        return posts.concat(await crawler({...config, url: config.pagination.relative ? config.pagination.base + next : next}))
+      } else {
+        console.log('finished')
+        return posts
+      }
+    } else{
+      return posts
+    }
 
-    return posts
+    // return posts
     
       
   } catch(err){
