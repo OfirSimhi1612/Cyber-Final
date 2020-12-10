@@ -9,13 +9,16 @@ const alertsPort = process.env.ALERTS_PORT || '3001'
 const crawlerHost = process.env.CRAWLER_HOST || 'localhost'
 const crawlerPort = process.env.CRAWLER_PORT || '4001'
 
+const selHost = process.env.SELF_HOST || 'localhost'
+const selfPort = process.env.SELF_PORT || '8080'
+
 async function initialElastic(){
     try{
-      if(!(await client.indices.exists({index:'posts'})).body){
+      if(!(await client.indices.exists({index:'posts_test'})).body){
           await client.indices.create({
-              index: 'posts',
+              index: 'posts_test',
           })
-          console.log('added index: posts')
+          console.log('added index: posts_test')
           return true
       }
        return false
@@ -26,25 +29,27 @@ async function initialElastic(){
   
 async function bulkPost(posts){
 try{
-    const isNew = await initialElastic()
-    if(!isNew){
-    posts = await compare(posts)
-    }
-    const body = posts.flatMap(doc => [{ index: { _index: 'posts' } }, doc])
+    await initialElastic()
+    console.log('recived ' + posts.length + ' posts!')
+    const body = posts.flatMap(doc => [{ index: { _index: 'posts_test', _id: doc.id, op_type: 'create'} }, doc])
     if(body.length > 0){
         try{
-            await client.bulk({
-                index: 'posts',
-                body: body
+            const response = await client.bulk({
+                index: 'posts_test',
+                body: body,
             })
+            console.log(response.body.items[0])
+            const newPosts = response.body.items.filter(post => post.create.status === 201)// 201 - created
+            // 409 - already exists
+            if(posts.length > 0){
+                await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: newPosts })
+            }
         } catch(err){
-            console.log(err.body.error)
+            console.log(err.body)
             await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
         }
     }
-    if(posts.length > 0){
-    await axios.post(`http://${alertsHost}:3001/alerts/post`, { posts: posts })
-    }
+    
 
 } catch(err){
     console.log(err.body)
@@ -56,13 +61,18 @@ try{
 
 async function updateDataBase(){
 try{
-    const { data } = await axios.get(`http://${crawlerHost}:${crawlerPort}/crawl`)
-    bulkPost(data)
+    axios.get(`http://${crawlerHost}:${crawlerPort}/crawl`, {
+        params: {
+            resURL: `http://${selHost}:${selfPort}/api/search/updateDB`
+        }
+    })
 } catch(err){
     console.log(err.message)
     await axios.post(`http://${alertsHost}:${alertsPort}/alerts/error`, { error: err.message })
 }
 }
 
-
-module.exports = updateDataBase
+module.exports = {
+    updateDataBase,
+    bulkPost
+}

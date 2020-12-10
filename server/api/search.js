@@ -1,7 +1,6 @@
 const { Router } = require('express')
 const { searchPosts, getLatest } = require('../elastic-search')
-// const bulkPost = require('../../crawler')
-// const fs = require('fs')
+const { bulkPost, updateDataBase } = require('../elastic-search/crawler')
 
 const router = Router()
 
@@ -16,7 +15,6 @@ router.get('/latest', async (req, res) => {
     }
 })
 
-
 router.get('/:query', async (req, res) => {
     try{
         const searchResults = await searchPosts(req.params.query) 
@@ -28,9 +26,15 @@ router.get('/:query', async (req, res) => {
     }
 })
 
-// const all = JSON.parse(fs.readFileSync('../../test.json'))
-
-// bulkPost(all)
+router.post('/updateDB', async (req, res) => {
+    try{
+        const response = await bulkPost(req.body.posts)
+        res.send(true)
+    } catch(err){
+        console.log(err)
+        res.status(500).send('Internal server error')      
+    }
+})
 
 
 module.exports = router

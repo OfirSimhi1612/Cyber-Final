@@ -12,10 +12,13 @@
   "dependencies": {
     "@elastic/elasticsearch": "^7.10.0",
     "axios": "^0.21.0",
+    "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
+    "js-yaml": "^3.14.0",
+    "md5": "^2.3.0",
     "morgan": "^1.10.0",
     "ner": "^1.0.0",
-    "puppeteer": "^5.5.0",
-    "sentiment": "^5.0.2"
+    "sentiment": "^5.0.2",
+    "tor-axios": "^1.0.9"
   }
 }

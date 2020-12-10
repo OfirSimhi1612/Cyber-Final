@@ -6,7 +6,7 @@ const { Alert } = require('./schmas');
 const app = express()
 
 app.use(express.json())
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 app.get('/alerts/count/:user', async (req, res) => {
     try{

@@ -8,7 +8,7 @@ const nerPort = process.env.NER_PORT || '9000'
 
 
 function regAuthor(author){
-    let reg_author = author
+    let reg_author = author.replace(/(\r\n|\n|\r)/gm, '').replace(/(\r\t|\t|\r)/gm, '')
 
     if(['Unknwon', 'Anonymous', 'Guest', ''].includes(author)){
         reg_author = 'Anonymous'
@@ -17,15 +17,14 @@ function regAuthor(author){
     return reg_author
 }
 
+
+
 async function contentAnalys(content){
-    content = content.join(', ')
     try{
-        const {data: entities} = await axios.post(`http://${nerHost}:${nerPort}`, {text: content})
+        const {data: entities} = await axios.post(`http://${nerHost}:${nerPort}/`, {text: content})
         const SentimentAnalysis = sentiment.analyze(content);
         return {
             score: SentimentAnalysis.comparative, 
-            neg_words: SentimentAnalysis.negative,
-            pos_words: SentimentAnalysis.positive,
             entities: entities
         }
     } catch(error){

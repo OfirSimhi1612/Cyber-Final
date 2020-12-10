@@ -1,4 +1,4 @@
-FROM buildkite/puppeteer:5.2.1
+FROM node:12
 
 WORKDIR /app/crawler
 

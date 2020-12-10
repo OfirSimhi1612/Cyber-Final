@@ -1,18 +1,19 @@
 const express = require('express')
 const morgan = require('morgan')
-const crawler = require('./crawler')
+const crawl = require('./exec')
 
 const app = express()
 
 app.use(express.json())
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 
 app.get('/crawl', async (req, res) => {
     try{
-        const newPosts = await crawler()
+        const resURL = req.query.resURL
+        crawl(resURL)
 
-        res.send(newPosts)
+        res.send(true)
     } catch(err){
         console.log(err)
         res.status(500).send(err.message)
