@@ -26,7 +26,7 @@
 
 --- # /paste.scratchbook - trending 
 name: "paste.scratchbook - Trending"
-url: "https://paste.scratchbook.ch/trends/38960"
+url: "https://paste.scratchbook.ch/trends/38900"
 network: null
 https: true
 navigation: # if need to navigate to different route
@@ -62,7 +62,7 @@ pathes:
 
 --- # /paste.scratchbook - recent 
 name: "paste.scratchbook - Recent"
-url: "https://paste.scratchbook.ch/lists/38940"
+url: "https://paste.scratchbook.ch/lists/38900"
 network: null
 https: true
 navigation: # if need to navigate to different route
@@ -98,7 +98,7 @@ pathes:
 
 --- # ideone - Recent 
 name: "ideone - Recent"
-url: "https://ideone.com/recent/38"
+url: "https://ideone.com/recent/35"
 network: null
 https: true
 navigation: # if need to navigate to different route

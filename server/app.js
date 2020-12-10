@@ -12,7 +12,7 @@ app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 app.use('/api', require('./api'))
 
-updateDataBase()
-setInterval(updateDataBase, 100000000)
+setTimeout(updateDataBase, 60000)
+setInterval(updateDataBase, 600000)
 
 module.exports = app

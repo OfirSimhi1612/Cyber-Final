@@ -95,7 +95,7 @@ async function crawler(config) {
       if(next){
         return posts.concat(await crawler({...config, url: config.pagination.relative ? config.pagination.base + next : next}))
       } else {
-        console.log('finished')
+        console.log('-----------------------------------')
         return posts
       }
     } else{
